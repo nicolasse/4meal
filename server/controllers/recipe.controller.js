@@ -1,11 +1,11 @@
 import Recipes from '../models/recipe.model'
 
-exports.getAllMeals = ( req,res ) => {
+exports.getAllIngredients = ( req,res ) => {
   Recipes
-    .find({})
+    .distinct('ingredients.name')
     .lean()
-    .then( meals => {
-      res.status(200).json( meals )
+    .then( ingredients => {
+      res.status(200).json( ingredients )
     } )
     .catch( error => {
       res.status(500).json(error.message)
@@ -16,7 +16,7 @@ exports.getMealByIngredients = ( req, res ) => {
   let arrayIngredients, query
   if( req.query.ingredients ){
     let arrayIngredients = req.query.ingredients.split(',')
-    query = { ingredients: ''+ arrayIngredients[0] +'' }
+    query = { 'ingredients.name': ''+ arrayIngredients[0] +'' }
   }
   else
     query = {}
@@ -49,6 +49,7 @@ exports.newRecipe = ( req, res ) => {
   newRecipe.description = req.body.description
   newRecipe.ingredients = req.body.ingredients
   newRecipe.directions = req.body.directions
+  newRecipe.img_url = req.body.img_url
   newRecipe.save()
     .then( recipe => {
       res.status(201).end()

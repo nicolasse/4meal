@@ -7,7 +7,7 @@ import Recipe from '../server/models/recipe.model'
 const expect = chai.expect
 var app,auth
 
-before((  ) => {
+before( () => {
   auth = require('../server/controllers/auth.controller')
   sinon.stub( auth, 'ensureAuthenticated' )
     .callsFake((req, res, next) => { return next() })
@@ -23,16 +23,17 @@ after(() => {
 
 
 describe('Login', () => {
-  it('login redirect to facebook', ( done ) => {
-    request(app)
-      .get('/api/auth/facebook')
-      .end( ( err, res ) => {
-        expect( res.statusCode ).to.equal(302)
-        done()
-      })
+  describe('GET /auth/facebook', () => {
+    it('login redirect to facebook', ( done ) => {
+      request(app)
+        .get('/api/auth/facebook')
+        .end( ( err, res ) => {
+          expect( res.statusCode ).to.equal(302)
+          done()
+        })
+    })
   })
 })
-
 
 describe('Meals', () => {
   beforeEach(() => { Recipe.deleteMany({})
@@ -40,7 +41,7 @@ describe('Meals', () => {
         return res
       }
       )
-      .catch( err => console.log(err) )
+      .catch( err => console.log( 'BeforeEach error' ) )
     
   })
   describe('POST /meals', () => {
@@ -59,30 +60,6 @@ describe('Meals', () => {
   })
 
   describe('GET /meals', () => {
-    it('respond with array containing an empty list of meals', ( done ) => {
-    Recipe( data.smoothie ).save()
-      .then( ()  => {
-      request(app)
-        .get('/api/meals')
-        .end( (err, res) => {
-          expect(res.statusCode).to.equal(200)
-          expect(res.body).to.be.an('array')
-          expect(res.body).to.have.lengthOf(1)
-          expect(res.body[0]).to.have.property('name')
-          expect(res.body[0]).to.have.property('description')
-          expect(res.body[0]).to.have.property('ingredients')
-          expect(res.body[0]).to.have.property('directions')
-          expect(res.body[0]).to.have.property('likes')
-          expect(res.body[0]).to.have.property('dislikes')
-          done()
-        } )
-      })
-      .catch( err => {
-        console.log(err)
-          done()
-      } )
-    })
-
     it('respond with array containing all the meals', ( done ) =>{
       Recipe( data.smoothie ).save()
         .then( () => Recipe( data.frittata ).save())
@@ -97,9 +74,10 @@ describe('Meals', () => {
         } )
         
       })
-      .catch( err => console.log(err) )
+      .catch( err => done() )
     })
-
+  })
+  describe('GET /meals/:id', () => {
     it('get recipe by id', ( done ) => {
       let frittata = new Recipe( data.frittata ) 
       frittata.save()
@@ -118,6 +96,7 @@ describe('Meals', () => {
           done()
       } )
       })
+      .catch( err => done() )
     })
 
     it('should get 404 with wrong id', ( done ) => {
@@ -127,6 +106,62 @@ describe('Meals', () => {
           expect(res.statusCode).to.equal(404)
           done()
         } )
+    })
+  })
+  describe('GET /meals?query=', () => {
+    it('should get all recipes with banana', ( done ) => {
+      Recipe( data.smoothie ).save()
+        .then( () => {
+          request(app)
+            .get('/api/meals?ingredients=banana')
+            .end( (err, res)  => {
+              expect(res.statusCode).to.equal(200)
+              expect(res.body).to.be.an('array')
+              expect(res.body).to.have.lengthOf(1)
+              done()
+            })
+        } )
+    })
+    it('should get an empty array', ( done ) => {
+      Recipe( data.smoothie ).save()
+        .then( () => {
+          request(app)
+            .get('/api/meals?ingredients=egg')
+            .end( (err, res)  => {
+              expect(res.statusCode).to.equal(200)
+              expect(res.body).to.be.an('array')
+              expect(res.body).to.have.lengthOf(0)
+              done()
+            })
+        } )
+    })
+  })
+
+  describe('GET /ingredients', () => {
+    it('should get an empty array of ingredients', (done) => {
+      request(app)
+        .get('/api/ingredients')
+        .end( (err, res) => {
+          expect(res.statusCode).to.equal(200)
+          expect(res.body).to.be.an('array')
+          expect(res.body).to.have.lengthOf(0)
+          done()
+        })
+    })
+    it('should get an array with all the 10 ingredients', (done) => {
+      Recipe( data.smoothie ).save()
+        .then( () => Recipe( data.frittata ).save())
+        .then( () => {
+      request(app)
+        .get('/api/ingredients')
+        .end( (err, res) => {
+          expect(res.statusCode).to.equal(200)
+          expect(res.body).to.be.an('array')
+          expect(res.body).to.have.lengthOf(10)
+          console.log(res.body)
+          done()
+        })
+    })
     })
   })
 
