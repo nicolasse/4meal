@@ -6,6 +6,10 @@ const RecipeSchema = new mongoose.Schema({
   name: {
     type: String,
   },
+  img_url: {
+    type: String,
+    required: true
+  },
   category: {
     type: String,
     enum: ['snack', 'complex']
@@ -25,12 +29,7 @@ const RecipeSchema = new mongoose.Schema({
     }
   ],
 
-  directions: [
-    {
-        step: Number,
-        description: String,
-    }
-  ],
+  directions: [ String ],
   likes: {
     type: Number,
     default: 0
