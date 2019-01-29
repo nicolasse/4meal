@@ -3,7 +3,7 @@ var FacebookStrategy = require('passport-facebook').Strategy
 import config from 'config'
 import User from '../models/user.model'
 
-let configFacebook = config.get('helpMEal.facebook')
+let configFacebook = config.get('4meal.facebook')
 
 exports.config = () => { passport.use( new FacebookStrategy({
     clientID: configFacebook.app_id,

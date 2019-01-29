@@ -1,14 +1,28 @@
-const recipes = {
+import mongoose from 'mongoose'
+
+exports.ingredients = {
+  vanilla: 'vanilla yougurt',
+  strawberries: 'strawberries',
+  banana: 'banana',
+  orange: 'orange',
+  onion: 'spring onion',
+  peas: 'peas',
+  cougette: 'courgette',
+  ham: 'ham',
+  chesse: 'chesse',
+  eggs: 'eggs'
+}
+exports.recipes = {
   smoothie: {
     name: 'Fruit smoothie',
     category: 'snack',
     img_url: 'https://hips.hearstapps.com/del.h-cdn.co/assets/16/19/1280x2087/gallery-1462829771-sunshine-daydream.jpg?resize=768:*',
     description: 'Cold smoothie',
     ingredients: [
-      { name: 'vanilla yogurt', amount: 1, measure: 'cup'},
-      { name: 'strawberries', amount: 1, measure: 'cup' },
-      { name: 'banana', amount: 1, measure: 'unity' },
-      { name: 'orange', amount: 1, measure: 'quarter' }
+      { nameId: 'vanilla yogurt', amount: 1, measure: 'cup'},
+      { nameId: 'strawberries', amount: 1, measure: 'cup' },
+      { nameId: 'banana', amount: 1, measure: 'unity' },
+      { nameId: 'orange', amount: 1, measure: 'quarter' }
       ],
     directions: [
         'Put the yogurt in a cup' ,
@@ -25,12 +39,12 @@ const recipes = {
     img_url: 'https://pioneerwoman.files.wordpress.com/2013/12/frittata1.jpg',
     description: 'Simple lunch dish',
     ingredients: [
-      { name: 'spring onion', amount: 1, measure: 'unity'},
-      { name: 'peas', amount: 4, measure: 'tablespoon' },
-      { name: 'courgette', amount: 1, measure: 'unity' },
-      { name: 'ham', amount: 2, measure: 'slice' },
-      { name: 'feta cheese', amount: 100, measure: 'gr' },
-      { name: 'eggs', amount: 4, measure: 'unity' }
+      { nameId: 'spring onion', amount: 1, measure: 'unity'},
+      { nameId: 'peas', amount: 4, measure: 'tablespoon' },
+      { nameId: 'courgette', amount: 1, measure: 'unity' },
+      { nameId: 'ham', amount: 2, measure: 'slice' },
+      { nameId: 'feta cheese', amount: 100, measure: 'gr' },
+      { nameId: 'eggs', amount: 4, measure: 'unity' }
     ],
     directions: [
       'Switch the oven on to 180C',
@@ -46,4 +60,3 @@ const recipes = {
   }
 }
 
-module.exports = recipes

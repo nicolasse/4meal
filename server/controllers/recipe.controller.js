@@ -1,13 +1,20 @@
 import Recipes from '../models/recipe.model'
 
-exports.getAllIngredients = ( req,res ) => {
+exports.getIngredients = ( req,res ) => {
+  let regIngredient = req.params.ingredient
   Recipes
-    .distinct('ingredients.name')
-    .lean()
-    .then( ingredients => {
-      res.status(200).json( ingredients )
+    //.find({'ingredients.name': { $regex: regIngredient, $options: 'i' }})
+    //.select('ingredients.name')
+    //.lean()
+    .aggregate([ 
+      {'$match': { "ingredients.name": /peas/ }},
+      {'$group': { "_id": '$ingredients' }}
+    ])
+    .then( result => {
+      res.status(200).json( result[0].ingredients )
     } )
     .catch( error => {
+      console.log(error.message)
       res.status(500).json(error.message)
     } )
 }
@@ -16,7 +23,7 @@ exports.getMealByIngredients = ( req, res ) => {
   let arrayIngredients, query
   if( req.query.ingredients ){
     let arrayIngredients = req.query.ingredients.split(',')
-    query = { 'ingredients.name': ''+ arrayIngredients[0] +'' }
+    query = { 'ingredients.nameId': ''+ arrayIngredients[0] +'' }
   }
   else
     query = {}
