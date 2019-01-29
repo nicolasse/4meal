@@ -4,8 +4,9 @@
   "description": "help for make a meal",
   "main": "server/index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node server/index.js --delay 1500ms",
-    "test": "NODE_ENV=test mocha --require babel-core/register 'test/meal.test' --exit"
+    "start": "nodemon --ignore client/ --exec babel-node server/index.js --delay 1500ms",
+    "test": "NODE_ENV=test mocha --require babel-core/register 'test/meal.test' --exit",
+    "loadDb": "mongo 127.0.0.1:27017/4mealTest  loadDb.js"
   },
   "author": "nicolas sanchez ernst",
   "license": "AGPL-3.0-or-later",

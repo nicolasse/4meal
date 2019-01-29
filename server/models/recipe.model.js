@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 
 mongoose.Promise = global.Promise;
+mongoose.set('useCreateIndex', true)
 
 const RecipeSchema = new mongoose.Schema({
   name: {
@@ -19,7 +20,7 @@ const RecipeSchema = new mongoose.Schema({
   },
   ingredients: [
     {
-      name: String,
+      nameId: { type: mongoose.Schema.Types.ObjectId, ref: 'Ingredients' },
       amount: Number,
       measure: {
         type: String,

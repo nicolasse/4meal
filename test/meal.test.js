@@ -1,11 +1,14 @@
 import request from 'supertest'
 import chai from 'chai'
-import data from './data/recipes'
+import recipesModule from './data/recipes'
 import nock from 'nock'
 import sinon from 'sinon'
 import Recipe from '../server/models/recipe.model'
+import Ingredient from '../server/models/ingredient.model'
+
 const expect = chai.expect
 var app,auth
+const data = recipesModule.recipes
 
 before( () => {
   auth = require('../server/controllers/auth.controller')
@@ -137,10 +140,10 @@ describe('Meals', () => {
     })
   })
 
-  describe('GET /ingredients', () => {
+  describe('GET /ingredients/filter/bana', () => {
     it('should get an empty array of ingredients', (done) => {
       request(app)
-        .get('/api/ingredients')
+        .get('/api/ingredients/filter/bana')
         .end( (err, res) => {
           expect(res.statusCode).to.equal(200)
           expect(res.body).to.be.an('array')
@@ -153,12 +156,11 @@ describe('Meals', () => {
         .then( () => Recipe( data.frittata ).save())
         .then( () => {
       request(app)
-        .get('/api/ingredients')
+        .get('/api/ingredients/filter/bana')
         .end( (err, res) => {
           expect(res.statusCode).to.equal(200)
           expect(res.body).to.be.an('array')
-          expect(res.body).to.have.lengthOf(10)
-          console.log(res.body)
+          expect(res.body).to.have.lengthOf(1)
           done()
         })
     })

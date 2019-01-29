@@ -2,6 +2,7 @@ import express from 'express'
 import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
+import methodOverride from 'method-override'
 import config from 'config'
 import router from './routes'
 import facebookStrategy from './controllers/auth.controller'
@@ -27,10 +28,20 @@ passport.deserializeUser(function(id, done) {
 passport.serializeUser(function(user, done) {
   done(null, user.facebook.id);
 });
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+app.use(methodOverride('_method'))
+
+
 app.use(passport.session())
-app.use(bodyParser.json())
 facebookStrategy.config()
 app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
 app.use('/api', router)
 
 https.createServer({
@@ -38,7 +49,7 @@ https.createServer({
   cert: fs.readFileSync('config/server.cert'),
 }, app).listen( port, () => {
   if(process.env.NODE_ENV !== 'test')
-    console.log('Runing on port: ' + port)
+    console.log('HTTPS Runing on port: ' + port)
 } )
 
 module.exports = app
