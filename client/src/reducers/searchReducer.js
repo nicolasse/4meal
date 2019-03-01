@@ -2,6 +2,9 @@ import {
   FETCH_RECIPES_STARTED,
   FETCH_RECIPES_SUCCESS,
   FETCH_RECIPES_FAILURE,
+  FETCH_RECIPE_STARTED,
+  FETCH_RECIPE_SUCCESS,
+  FETCH_RECIPE_FAILURE,
   FETCH_INGREDIENT_STARTED,
   FETCH_INGREDIENT_SUCCESS,
   FETCH_INGREDIENT_FAILURE,
@@ -12,6 +15,7 @@ import {
 const INITIAL_STATE = {
   error: null,
   loading: false,
+  recipe: {},
   recipes: [],
   ingredients: [{
     name: '',
@@ -35,6 +39,23 @@ const searchReducer = ( state = INITIAL_STATE, action ) => {
         recipes: action.payload
       }
     case FETCH_RECIPES_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error
+      }
+    case FETCH_RECIPE_STARTED:
+      return {
+        ...state,
+        loading: true,
+      }
+    case FETCH_RECIPE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        recipe: action.payload
+      }
+    case FETCH_RECIPE_FAILURE:
       return {
         ...state,
         loading: false,

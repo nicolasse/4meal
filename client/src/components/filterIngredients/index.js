@@ -33,11 +33,9 @@ class Results extends Component {
 
   render(){
     return(
-      <Wrapper>
         <List>
           { this.showSelectedIngredients() }
         </List>
-      </Wrapper>
     )
 
   }

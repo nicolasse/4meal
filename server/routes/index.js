@@ -11,7 +11,6 @@ router.get('/meals/:id', RecipeController.getById)
 //router.post('/meals', AuthController.ensureAuthenticated, RecipeController.newRecipe)
 router.post('/meals', RecipeController.newRecipe)
 
-router.get('/ingredients/filter/:ingredient', RecipeController.getIngredients)
 router.get('/ingredients/suggest/:ingredient', IngredientController.getIngredientsSuggest)
 //router.post('/ingredients', AuthController.ensureAuthenticated, IngredientController.createIngredient)
 router.post('/ingredients', IngredientController.createIngredient)

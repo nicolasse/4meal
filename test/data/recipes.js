@@ -1,17 +1,47 @@
 import mongoose from 'mongoose'
 
-exports.ingredients = {
-  vanilla: 'vanilla yougurt',
-  strawberries: 'strawberries',
-  banana: 'banana',
-  orange: 'orange',
-  onion: 'spring onion',
-  peas: 'peas',
-  cougette: 'courgette',
-  ham: 'ham',
-  chesse: 'chesse',
-  eggs: 'eggs'
-}
+exports.ingredients = [
+  {
+  name: 'vanilla yogurt',
+  img_url: '/img.jpg',
+  },
+  {
+  name: 'strawberries',
+  img_url: '/img.jpg',
+  },
+  {
+  name: 'banana',
+  img_url: '/img.jpg',
+  },
+  {
+  name: 'orange',
+  img_url: '/img.jpg',
+  },
+  {
+  name: 'spring onion',
+  img_url: '/img.jpg',
+  },
+  {
+  name: 'peas',
+  img_url: '/img.jpg',
+  },
+  {
+  name: 'courgette',
+  img_url: '/img.jpg',
+  },
+  {
+  name: 'ham',
+  img_url: '/img.jpg',
+  },
+  {
+  name: 'cheese',
+  img_url: '/img.jpg',
+  },
+  {
+  name: 'egg',
+  img_url: '/img.jpg',
+  }
+]
 exports.recipes = {
   smoothie: {
     name: 'Fruit smoothie',
@@ -43,8 +73,8 @@ exports.recipes = {
       { nameId: 'peas', amount: 4, measure: 'tablespoon' },
       { nameId: 'courgette', amount: 1, measure: 'unity' },
       { nameId: 'ham', amount: 2, measure: 'slice' },
-      { nameId: 'feta cheese', amount: 100, measure: 'gr' },
-      { nameId: 'eggs', amount: 4, measure: 'unity' }
+      { nameId: 'cheese', amount: 100, measure: 'gr' },
+      { nameId: 'egg', amount: 4, measure: 'unity' }
     ],
     directions: [
       'Switch the oven on to 180C',

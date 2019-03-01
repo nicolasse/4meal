@@ -1,8 +1,16 @@
 import styled from 'styled-components'
 
 export const Wrapper = styled.section`
- width: 100%; 
+  width: 100%;
 `
+export const FormContent = styled.div`
+  height: 60vh;
+  overflow-y: auto;
+  padding: 1em;
+  background: white;
+
+`
+
 export const Create = styled.input.attrs({type: 'submit'})`
   text-decoration: none;
   border: none;
@@ -31,6 +39,7 @@ export const Add = styled.span`
   }
   justify-self: end;
   margin: 1em;
+  padding: 0 0.5em;
 `
 
 export const Select = styled.select`
@@ -39,7 +48,7 @@ export const Select = styled.select`
   height: 2em;
   
 `
-export const Textarea = styled.textarea`
+export const Textarea = styled.textarea.attrs({ required: true })`
   font-size: 1.5em;
   width: 100%;
   min-height: 100px;
@@ -51,7 +60,6 @@ export const AddIngredient = styled.div`
   display: flex;
   flex-flow: row wrap;
   justify-content: space-around;
-  border: 1px solid grey;
   padding: 1em;
   align-items: center;
 `

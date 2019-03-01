@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Content } from './style'
+import { Content, BackgroundImg } from './style'
 import { Provider } from 'react-redux'
 import configureStore from './store/configureStore'
 import FilterIngredients from './components/filterIngredients'
@@ -9,22 +9,27 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 
 import Home from './views/home'
 import Ingredients from './views/ingredients'
-import Meals from './views/meals'
+import CreateMeal from './views/createMeal'
+import ShowMeal from './views/showMeal'
+import Recipe from './components/recipe'
+import Navbar from './components/navbar'
 
 const store = configureStore()
 class App extends Component {
   render() {
     return (
       <Provider store={ store }>
+      <Router>
       <Content>
-        <Router>
+      <Navbar />
           <Switch>
             <Route exact path='/' component={ Home } />
             <Route path='/ingredients' component={ Ingredients } />
-            <Route path='/meals' component={ Meals } />
+            <Route exact path='/meals' component={ CreateMeal } />
+            <Route path='/meals/:id' render={({ match }) => (<ShowMeal id={ match.params.id }/> )}/>
           </Switch>
-        </Router>
       </Content>
+      </Router>
       </Provider>
 
     );

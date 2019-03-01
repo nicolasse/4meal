@@ -1,7 +1,7 @@
 import Ingredient from '../models/ingredient.model'
 
 exports.getIngredientsSuggest = ( req, res ) => {
-  let regIngredient  = req.params.ingredient
+  let regIngredient  = '^' + req.params.ingredient
   Ingredient.find({'name': { $regex: regIngredient, $options: 'i' }})
     .lean()
     .then( result => {
@@ -14,8 +14,7 @@ exports.getIngredientsSuggest = ( req, res ) => {
 }
 
 exports.createIngredient = ( req, res ) => {
-  let newIngredient = new Ingredient()
-  console.log(req.body)
+  let newIngredient = new Ingredient( req.body )
   newIngredient.name = req.body.name
   newIngredient.img_url = req.body.img_url
   newIngredient.save()

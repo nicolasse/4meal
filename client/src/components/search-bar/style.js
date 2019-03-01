@@ -6,7 +6,7 @@ export const Wrapper = styled.div`
   flex-flow: row wrap;
   flex: 1 1 auto;
   position: relative;
-  font-size: 100%;
+  box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.5);
 `
 
 export const SuggestList = styled.ul`
@@ -19,6 +19,7 @@ export const SuggestList = styled.ul`
   width: 100%;
   max-height: 4em;
   overflow-y: auto;
+  box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.5);
 `
 
 export const Suggest = styled.li`

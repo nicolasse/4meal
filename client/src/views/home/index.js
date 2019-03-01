@@ -3,28 +3,37 @@ import MealsResults from '../../components/mealsResults'
 import FilterIngredients from '../../components/filterIngredients'
 import React, { Component } from 'react'
 import Header from '../../components/header'
-import {Main, Wrapper, Section, SearchSection } from './style'
+import {Main, Wrapper, Section, SearchSection, CreateMeal } from './style'
 import { clearSuggestions } from '../../actions/searchActions'
 import { connect } from 'react-redux'
 import { add } from '../../actions/filterActions'
+import Navbar from '../../components/navbar'
 
 class Home extends Component {
+  state= {
+    id: ''
+  }
   handleAnyClick = ()=>{
     this.props.clearSuggestions()
+  }
+
+  handleClick = (id) => {
+    this.setState({ id: id })
+
   }
   render(){
     return (
       <Wrapper onClick={ this.handleAnyClick }>
-        <Header />
           <SearchSection>
-            <SearchBar add={ this.props.add }/>
+              What do you have in your fridge?
+            <SearchBar add={ this.props.add } autoFocus/>
           </SearchSection>
         <Main>
           <Section ingredients>
             <FilterIngredients />
           </Section>
           <Section>
-            <MealsResults />
+            <MealsResults handleClick={ this.handleClick }/>
           </Section>
         </Main>
       </Wrapper>
