@@ -4,6 +4,10 @@ export const FETCH_RECIPES_STARTED = 'FETCH_RECIPES_STARTED'
 export const FETCH_RECIPES_SUCCESS = 'FETCH_RECIPES_SUCCESS'
 export const FETCH_RECIPES_FAILURE = 'FETCH_RECIPES_FAILURE'
 
+export const FETCH_RECIPE_STARTED = 'FETCH_RECIPE_STARTED'
+export const FETCH_RECIPE_SUCCESS = 'FETCH_RECIPE_SUCCESS'
+export const FETCH_RECIPE_FAILURE = 'FETCH_RECIPE_FAILURE'
+
 export const FETCH_INGREDIENT_STARTED = 'FETCH_INGREDIENT_STARTED'
 export const FETCH_INGREDIENT_SUCCESS = 'FETCH_INGREDIENT_SUCCESS'
 export const FETCH_INGREDIENT_FAILURE = 'FETCH_INGREDIENT_FAILURE'
@@ -17,7 +21,7 @@ export const fetchRecipes = ( ingredients ) => {
     dispatch( fetchRecipesStarted() )
     axios({
       method: 'GET',
-      url: '/api/meals/' + ingredients
+      url: '/api/meals?ingredients=' + ingredients
     })
       .then( res => {
         dispatch(fetchRecipesSuccess(res.data))
@@ -27,6 +31,8 @@ export const fetchRecipes = ( ingredients ) => {
       } )
   }
 }
+
+
 
 const fetchRecipesSuccess = recipes => ({
   type: FETCH_RECIPES_SUCCESS,
@@ -39,6 +45,35 @@ const fetchRecipesStarted = () => ({
 
 const fetchRecipesFailure = error => ({
   type: FETCH_RECIPES_FAILURE,
+  payload: error
+})
+export const fetchRecipeById = ( id ) => {
+  return dispatch => {
+    dispatch( fetchRecipeStarted() )
+    axios({
+      method: 'GET',
+      url: '/api/meals/' +id
+    })
+      .then( res => {
+        dispatch(fetchRecipeSuccess(res.data))
+      } )
+      .catch( err => {
+        dispatch(fetchRecipeFailure(err.message))
+      } )
+  }
+}
+
+const fetchRecipeSuccess = recipe => ({
+  type: FETCH_RECIPE_SUCCESS,
+  payload: recipe
+})
+
+const fetchRecipeStarted = () => ({
+  type: FETCH_RECIPE_STARTED,
+})
+
+const fetchRecipeFailure = error => ({
+  type: FETCH_RECIPE_FAILURE,
   payload: error
 })
 
@@ -80,3 +115,4 @@ export const selectIngredient = (id) => ({
   type: HOVER_INGREDIENT,
   id
 })
+

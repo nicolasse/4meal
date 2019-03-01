@@ -13,7 +13,6 @@ class CreateIngredient extends Component {
 
   componentDidMount(){
     this.setState({
-      name: this.props.newIngredient,
       img_url: 'https://yourlighterside.com/wp-content/uploads/2012/09/Low-Carb.jpg' 
     })
   }
@@ -37,7 +36,7 @@ class CreateIngredient extends Component {
     this.setState({ [name] : value })
   }
 
-  handleCancel = () => {
+  handleCancel = (e) => {
     this.props.history.goBack()
   }
 
@@ -47,6 +46,7 @@ class CreateIngredient extends Component {
         <form onSubmit= {this.handleSubmit}>
           ingredient
           <Input
+            autoFocus
             onChange={ this.handleChange }
             name='name'
             placeholder='name' 
@@ -59,8 +59,8 @@ class CreateIngredient extends Component {
             placeholder='image url'
             required
           />
-          <CancelButton onClick={ this.handleCancel }>Cancel</CancelButton>
           <CreateButton value='Create' />
+          <CancelButton onClick={ this.handleCancel }>Cancel</CancelButton>
         </form>
         <Preview>
         <SuggestList>

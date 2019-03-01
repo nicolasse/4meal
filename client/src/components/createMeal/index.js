@@ -8,7 +8,8 @@ import {
   Ingredient,
   Icon,
   Add,
-  Create
+  Create,
+  FormContent
 } from './style'
 import { Input } from '../commons/style'
 import { connect } from 'react-redux'
@@ -18,14 +19,17 @@ const measures= ['tablespoon', 'teaspoon', 'cup', 'unity', 'half', 'quarter', 'g
 
 class CreateMeal extends Component {
   state={
-    ingredientObject:{},
+    nameId:{},
     measure:'tablespoon',
     amount: 1,
-    directions: []
+    directions: [],
+    newDirection: '',
+    ingredients: []
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
+    this.props.handleSubmit()
   }
 
   showIngredientsOptions = () => {
@@ -39,11 +43,15 @@ class CreateMeal extends Component {
   }
 
   handleAdd = ( e ) => {
-    this.setState({ ingredientObject: e })
+    this.setState({ nameId: e })
   }
 
   handleAddIngredient = (e) => {
-    this.props.add(this.state)
+    this.setState( prevState => ({
+      ingredients: prevState.ingredients.concat( [{amount: prevState.amount, measure: prevState.measure, nameId: prevState.nameId}] )
+    }), () => {
+      this.props.add(this.state.ingredients)
+    } )
   }
 
   handleChange = ( e ) => {
@@ -58,22 +66,55 @@ class CreateMeal extends Component {
     this.setState({ [name]: value })
   }
 
+  handleChangeDirection = (e) => {
+    this.setState( { newDirection: e.target.value })
+  }
+
+  handleAddDirection = () => {
+    this.setState( (prevState) => ({
+      directions: prevState.directions.concat([ prevState.newDirection ]),
+      newDirection: ''
+    }),() => {
+      this.props.handleChange({target: {name: 'directions', value: this.state.directions}})})
+  }
+
+
+  handleRemove = (index, type) => {
+    let newArray = Object.assign([], this.state[type])
+    newArray.splice(index,1)
+    this.setState((prevState)=> ({
+      [type]: newArray
+    }), () => {
+      this.props.add(this.state.ingredients)
+    })
+  }
+
+  handleEnterPress = (e) => {
+    if(e.key === 'Enter'){
+      e.preventDefault()
+      this.handleAddDirection()
+    }
+  }
+
+
   render(){
     return(
       <Wrapper>
         <form onSubmit={ this.handleSubmit }>
+        <FormContent>
           Meal
           <Input
             onChange={ this.props.handleChange }
             placeholder='name'
             name='name'
+            autoFocus
             required
           />
           Image
           <Input
             onChange={ this.props.handleChange }
             placeholder='image url' 
-            name='image_url'
+            name='img_url'
             required
           />
           <br />
@@ -87,17 +128,17 @@ class CreateMeal extends Component {
           </Select>
           <br /><br />Description
           <Textarea 
+            type='text'
             onChange={ this.props.handleChange }
             name='description'
             placeholder='Write a description here...'
-            required
           />
-          <SearchBar add={ this.handleAdd}/>
+          <SearchBar add={ this.handleAdd} autoFocus={false}/>
           +ingredients: amount measure
           <AddIngredient>
             <Ingredient>
-              { this.state.ingredientObject.name }
-              <Icon src={ this.state.ingredientObject.img_url } />
+              { this.state.nameId.name }
+              <Icon src={ this.state.nameId.img_url } />
             </Ingredient>
             <Input
               onChange={ this.handleChange }
@@ -110,12 +151,40 @@ class CreateMeal extends Component {
               { this.showMeasures() }
             </Select>
             <Add onClick={ this.handleAddIngredient }>Add</Add>
+          <ul>
+            { this.state.ingredients.map( (ing, index) => {
+              return (
+                <li key={ing.nameId._id}>
+                  {ing.nameId.name}
+                  <span onClick={ () => { this.handleRemove(index, 'ingredients') } }>(remove)</span>
+                </li>
+              )
+              } ) 
+            }
+          </ul>
           </AddIngredient>
           <AddDirections>
           +directions
-          <Input />
-            <Add >Add</Add>
+          <Input 
+              value={ this.state.newDirection }
+              onChange={ this.handleChangeDirection }
+              placeholder='Add direction...'
+              onKeyPress={ this.handleEnterPress }
+          />
+            <ul>
+              { this.state.directions.map( (direction, index ) => {
+                  return (
+                    <li key={index}>{ direction + " "}
+                      <span onClick={
+                        () => { this.handleRemove(index, 'directions') }
+                      }>(remove)
+                      </span>
+                    </li>
+                  )
+              }) }
+            </ul>
           </AddDirections>
+          </FormContent>
           <Create value='Create' />
         </form>
       </Wrapper>
@@ -123,6 +192,6 @@ class CreateMeal extends Component {
   }
 }
 
-const mapStateToProps = state => ({ state: state.ingredi })
+const mapStateToProps = state => ({ ingredients: state.ingredi })
 
 export default CreateMeal

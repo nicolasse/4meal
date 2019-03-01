@@ -5,8 +5,9 @@
   "main": "server/index.js",
   "scripts": {
     "start": "nodemon --ignore client/ --exec babel-node server/index.js --delay 1500ms",
-    "test": "NODE_ENV=test mocha --require babel-core/register 'test/meal.test' --exit",
+    "test": "NODE_ENV=test nyc --require babel-core/register mocha 'test/meal.test' --exit",
     "loadDb": "mongo 127.0.0.1:27017/4mealTest  loadDb.js"
+
   },
   "author": "nicolas sanchez ernst",
   "license": "AGPL-3.0-or-later",
@@ -25,6 +26,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "chai": "^4.2.0",

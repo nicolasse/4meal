@@ -7,7 +7,7 @@ class Ingredients extends Component {
   render(){
     return(
       <Wrapper>
-      <CreateIngredient newIngredient={ this.props.location.state.ingredient }/>
+      <CreateIngredient/>
       </Wrapper>
     )
   }

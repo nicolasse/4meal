@@ -39,9 +39,11 @@ export const Ingredient = styled.li`
   padding: 5px;
   border: 1px solid #ccdee8;
   border-bottom: none;
+  box-sizing: border-box;
   &:last-child {
     border-bottom: 1px solid #ccdee8;
   }
+  background: white;
 `
 
 export const Icon = styled.img`

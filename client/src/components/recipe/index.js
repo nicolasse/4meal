@@ -1,37 +1,55 @@
-import React from 'react'
-import { Wrapper, Title, Image, Description } from './style'
+import React, { Component } from 'react'
+import {Li, Number,Info, Header, Wrapper, Title, Image, Description } from './style'
 
-const Recipe = (props) => {
-  const showIngredients = () => {
-    return props.info.ingredients.map( ingredient => {
-      return <li>{ 
-        ingredient.amount
-        + ' ' +
-        ingredient.measure
-        + ' ' +
-        ingredient.ingredientObject.name }
+
+function Recipe(props){
+  let recipes = props.recipe
+  const showIngredients = (ingredients) =>
+  {
+    return ingredients.map( ingredient =>
+    {
+      return (
+        <li>
+          {
+            ingredient.amount
+            + ' ' +
+            ingredient.measure
+            + ' ' +
+            ingredient.nameId.name
+          }
         </li>
-    } )
+      )
+    })
   }
-  return(
-    <Wrapper>
-      <Image src={ props.info.image_url } />
-      Name: <strong>{ props.info.name }</strong>
-      Type:
-        <br />
-        <strong>{ props.info.category }</strong>
-        Ingredients
+    return(
+      <Wrapper>
+        <Header>
+          <Image src={ recipes.img_url } />
+          <Info>
+            <h2>{ recipes.name }</h2>
+            <br />
+            <strong>{ recipes.category }</strong>
+            <br />
 
-        Description:<br />
-        <Description>
-        { props.info.description }
-        </Description>
-        <ul>
-        { showIngredients() }
-        </ul>
-        Instructions
-    </Wrapper>
-  )
+            <Description>
+              { '"' + recipes.description + '"' }
+            </Description>
+          </Info>
+        </Header>
+          Ingredients
+          <ul>
+            { recipes.ingredients ? showIngredients(recipes.ingredients): null }
+          </ul>
+          Directions:
+          {
+            recipes.directions 
+              ?  <ul>{recipes.directions.map( (step, index) => {
+                return <Li><Number>{index + 1}</Number>{step}</Li> } )
+              }</ul> 
+              : null
+          }
+      </Wrapper>
+    )
 }
 
 export default Recipe

@@ -3,21 +3,22 @@ import { connect } from 'react-redux'
 import { ContentBar,  Search, Wrapper, Suggest, SuggestList, CreateButton, Icon } from './style'
 import { fetchIngredient, clearSuggestions, selectIngredient } from '../../actions/searchActions'
 import CreateIngredient from '../createIngredient'
-//import { add } from '../../actions/filterActions'
 
 class SearchBar extends Component {
   state = {
     hide: true,
-    ingredient: ''
+    ingredient: '',
+    resultLength: 0,
+    selectIndex: -1,
   }
 
   handleChange = ( e ) => {
     let ingredient = (e.target.value).replace(/[^a-z0-9]*$/gi, '') 
-    this.setState({ ingredient: ingredient })
+    this.setState({ ingredient: ingredient, selectIndex: -1 })
     if(ingredient.length > 0){
       this.props.fetchIngredient(ingredient)
 
-      if(this.props.state.ingredients[0].name !== ingredient){
+      if(this.props.ingredients[0].name !== ingredient){
         this.setState({ hide: false })
       }
       else{
@@ -37,10 +38,27 @@ class SearchBar extends Component {
     this.setState({ ingredient: '' })
   }
 
-  showResult = () => {
-    if(this.props.state.ingredients[0].name !== ''){
+  handleKeyPress = (event)  => {
+    if(event.keyCode === 40 && this.state.selectIndex < this.props.ingredients.length -1){
+      this.setState(prevState => ({ selectIndex: prevState.selectIndex + 1 }),() => {
+        this.props.selectIngredient( this.props.ingredients[this.state.selectIndex]._id )
+      })
 
-     return this.props.state.ingredients.map( ingredient => {
+
+    }
+    if( event.keyCode === 38 && this.state.selectIndex > 0){
+      this.setState(prevState => ({ selectIndex: prevState.selectIndex - 1 }),() => {
+        this.props.selectIngredient( this.props.ingredients[this.state.selectIndex]._id )
+      })
+    }
+
+  }
+
+  showResult = () => {
+    if(this.props.ingredients[0].name !== ''){
+      let length = this.props.ingredients.length
+
+     return this.props.ingredients.map( ingredient => {
       return( 
          <Suggest
             key={ingredient._id}
@@ -58,7 +76,9 @@ class SearchBar extends Component {
 
   handleEnter = (e) => {
     if(e.key === 'Enter'){
-      this.props.add( this.state.ingredient )
+      this.props.add( this.props.ingredients[this.state.selectIndex] )
+      this.props.clearSuggestions()
+      this.setState({ ingredient: '' })
 
     }
   }
@@ -68,19 +88,14 @@ class SearchBar extends Component {
       <Wrapper>
         <ContentBar>
           <Search
-            autoFocus
+            autoFocus={ this.props.autoFocus }
             selected
             onChange={ this.handleChange }
-            //onKeyPress={ this.handleEnter }
+            onKeyUp = { this.handleKeyPress }
+            onKeyPress={ this.handleEnter }
             value= {this.state.ingredient}
             placeholder='ingredients...'
           />
-          <CreateButton
-            shouldhide={ this.state.hide }
-            to={{ pathname:'/ingredients', state:{ingredient: this.state.ingredient }}}
-          >
-              Create this new ingredient
-          </CreateButton>
         </ContentBar>
         <SuggestList>
           { this.showResult() }
@@ -90,7 +105,7 @@ class SearchBar extends Component {
   }
 }
 
-const mapStateToProps = state => ({ state: state.searchReducer })
+const mapStateToProps = state => ({ ingredients: state.searchReducer.ingredients })
 
 const mapDispatchToProps = dispatch => ({
   fetchIngredient: ( ingredient )=>{

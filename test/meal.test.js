@@ -1,3 +1,4 @@
+require('babel-polyfill')
 import request from 'supertest'
 import chai from 'chai'
 import recipesModule from './data/recipes'
@@ -9,21 +10,49 @@ import Ingredient from '../server/models/ingredient.model'
 const expect = chai.expect
 var app,auth
 const data = recipesModule.recipes
+var ingredients = []
 
-before( () => {
+const getIngredient = ( ingredient ) => {
+  let dbIngredient = ingredients.find( x => {
+    return x.name === ingredient.nameId
+  } )
+  return {
+    ...ingredient,
+    nameId: dbIngredient._id,
+  }
+}
+
+
+
+
+before( async () => {
   auth = require('../server/controllers/auth.controller')
   sinon.stub( auth, 'ensureAuthenticated' )
     .callsFake((req, res, next) => { return next() })
   app = require('../server/index.js')
-
+  await Ingredient.deleteMany({})
+  let ingPromises = recipesModule.ingredients.map((ingredient) => {
+    let ingredientToSave = new Ingredient(ingredient)
+     return ingredientToSave.save()
+  } )
+  await Promise.all( ingPromises )
+  await Ingredient.find()
+    .then( res => {
+      ingredients = res;
+    } )
+    .catch(err => console.log(err))
+  Object.keys(data).forEach( recipe => {
+    let newIngredients = data[recipe].ingredients.map( ingredient => {
+      return getIngredient( ingredient )
+    } )
+    data[recipe].ingredients = newIngredients
+  } )
 
 })
 
 after(() => {
   auth.ensureAuthenticated.restore();
 });
-
-
 
 describe('Login', () => {
   describe('GET /auth/facebook', () => {
@@ -47,9 +76,9 @@ describe('Meals', () => {
       .catch( err => console.log( 'BeforeEach error' ) )
     
   })
-  describe('POST /meals', () => {
-    it('create a new meal', (done) => {
-    request(app)
+  describe('POST /meals',  () => {
+    it('create a new meal',  (done) => {
+     request(app)
         .post('/api/meals/')
         .send(data.smoothie)
         .end( (err, res) => {
@@ -59,25 +88,6 @@ describe('Meals', () => {
           expect(res.statusCode).to.equal(201)
           done()
         } )
-    })
-  })
-
-  describe('GET /meals', () => {
-    it('respond with array containing all the meals', ( done ) =>{
-      Recipe( data.smoothie ).save()
-        .then( () => Recipe( data.frittata ).save())
-        .then( () => {
-      request(app)
-        .get('/api/meals')
-        .end( (err, res) =>{
-          expect(res.statusCode).to.equal(200)
-          expect(res.body).to.be.an('array')
-          expect(res.body).to.have.lengthOf(2)
-          done()
-        } )
-        
-      })
-      .catch( err => done() )
     })
   })
   describe('GET /meals/:id', () => {
@@ -113,10 +123,11 @@ describe('Meals', () => {
   })
   describe('GET /meals?query=', () => {
     it('should get all recipes with banana', ( done ) => {
+      let banana = getIngredient({nameId: 'banana'})
       Recipe( data.smoothie ).save()
         .then( () => {
           request(app)
-            .get('/api/meals?ingredients=banana')
+            .get('/api/meals?ingredients='+banana.nameId)
             .end( (err, res)  => {
               expect(res.statusCode).to.equal(200)
               expect(res.body).to.be.an('array')
@@ -126,10 +137,11 @@ describe('Meals', () => {
         } )
     })
     it('should get an empty array', ( done ) => {
+      let egg = getIngredient({nameId: 'egg'})
       Recipe( data.smoothie ).save()
         .then( () => {
           request(app)
-            .get('/api/meals?ingredients=egg')
+            .get('/api/meals?ingredients='+egg.nameId)
             .end( (err, res)  => {
               expect(res.statusCode).to.equal(200)
               expect(res.body).to.be.an('array')
@@ -137,33 +149,6 @@ describe('Meals', () => {
               done()
             })
         } )
-    })
-  })
-
-  describe('GET /ingredients/filter/bana', () => {
-    it('should get an empty array of ingredients', (done) => {
-      request(app)
-        .get('/api/ingredients/filter/bana')
-        .end( (err, res) => {
-          expect(res.statusCode).to.equal(200)
-          expect(res.body).to.be.an('array')
-          expect(res.body).to.have.lengthOf(0)
-          done()
-        })
-    })
-    it('should get an array with all the 10 ingredients', (done) => {
-      Recipe( data.smoothie ).save()
-        .then( () => Recipe( data.frittata ).save())
-        .then( () => {
-      request(app)
-        .get('/api/ingredients/filter/bana')
-        .end( (err, res) => {
-          expect(res.statusCode).to.equal(200)
-          expect(res.body).to.be.an('array')
-          expect(res.body).to.have.lengthOf(1)
-          done()
-        })
-    })
     })
   })
 

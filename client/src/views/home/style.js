@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { device } from '../../device.js'
+import { NavLink } from 'react-router-dom'
 //let img = require('../../images/tmg-slideshow_l.jpg')
 
 export const Section = styled.section`
@@ -10,9 +11,8 @@ export const Section = styled.section`
   }
   @media ${device.laptop}{
     ${ props => props.ingredients ? 'flex: 1 1' : 'flex: 2 0' } 
-    height: 297px;
     margin: 0 1em 0 1em;
-
+    overflow-y: auto;
   }
 `
 
@@ -23,15 +23,19 @@ export const SearchSection = styled.div`
 export const Wrapper = styled.div`
   display: flex;
   flex-flow: row wrap;
-  height: 100vh;
   justify-content: center;
-
-
+  margin-top: 5%;
 `
 
 export const Main = styled.div`
   display: flex;
   flex-flow: row wrap
   flex: 66%;
-  padding: 2em;
+  padding: 0 2em;
+  margin-top: 3em;
+`
+
+export const CreateMeal = styled(NavLink)`
+  text-decoration: none;
+  color: black;
 `
