@@ -89,6 +89,18 @@ describe('Meals', () => {
           done()
         } )
     })
+    it('should get an error for wrong recipe',  (done) => {
+     request(app)
+        .post('/api/meals/')
+        .send({...data.smoothie, category: 'other'})
+        .end( (err, res) => {
+          if(err){
+            done(err)
+          }
+          expect(res.statusCode).to.equal(500)
+          done()
+        } )
+    })
   })
   describe('GET /meals/:id', () => {
     it('get recipe by id', ( done ) => {
@@ -136,7 +148,7 @@ describe('Meals', () => {
             })
         } )
     })
-    it('should get an empty array', ( done ) => {
+    it('should get an empty array for no meal match', ( done ) => {
       let egg = getIngredient({nameId: 'egg'})
       Recipe( data.smoothie ).save()
         .then( () => {
@@ -150,6 +162,94 @@ describe('Meals', () => {
             })
         } )
     })
+    it('should get an empty array for non ingredient', ( done ) => {
+      Recipe( data.smoothie ).save()
+        .then( () => {
+          request(app)
+            .get('/api/meals?ingredients=')
+            .end( (err, res)  => {
+              expect(res.statusCode).to.equal(200)
+              expect(res.body).to.be.an('array')
+              expect(res.body).to.have.lengthOf(0)
+              done()
+            })
+        } )
+    })
+    it('should get an error with unexcist ingredient', ( done ) => {
+      let nonIngredient = {nameId: 'aslkdj3la3lgjalh'}
+      Recipe( data.smoothie ).save()
+        .then( () => {
+          request(app)
+            .get('/api/meals?ingredients='+nonIngredient.nameId)
+            .end( (err, res)  => {
+              expect(res.statusCode).to.equal(404)
+              done()
+            })
+        } )
+    })
   })
-
 })
+
+describe('Ingredients', () => {
+  describe('POST /ingredients', () => {
+    it('create a new ingredient', done => {
+      request(app)
+        .post('/api/ingredients')
+        .send({ name: 'laranja', img_url: 'url.png' })
+        .end( (err, res) => {
+          expect(res.statusCode).to.equal(200)
+          expect(res.body).to.be.an('object')
+          expect(res.body).to.have.a.property('name')
+          expect(res.body).to.have.a.property('img_url')
+          done()
+        } )
+    }) 
+    it('should get an error for required name', done => {
+      request(app)
+        .post('/api/ingredients')
+        .send({img_url: 'some'})
+        .end( (err, res) => {
+          expect(res.statusCode).to.equal(500)
+          done()
+        } )
+    })
+    it('should get an error for required img_url', done => {
+      request(app)
+        .post('/api/ingredients')
+        .send({name: 'some'})
+        .end( (err, res) => {
+          expect(res.statusCode).to.equal(500)
+          done()
+        } )
+    })
+    it('should get an error for unique name', done => {
+      request(app)
+        .post('/api/ingredients')
+        .send({name: 'banana', img_url: 'some.png'})
+        .end( (err, res) => {
+          expect(res.statusCode).to.equal(500)
+          done()
+        } )
+    })
+  })
+  describe('GET /ingredients/suggest/:ingredient', () => {
+    it('should get an array of suggestions', (done) => {
+      request(app)
+        .get('/api/ingredients/suggest/ban')
+        .end( (err, res) => {
+          expect( res.statusCode ).to.equal(200)
+          expect(res.body).to.be.an('array')
+          done() 
+        } )
+    })
+    it('should get an error for wrong characters', (done) => {
+      request(app)
+        .get('/api/ingredients/suggest/$#!')
+        .end( (err, res) => {
+          expect( res.statusCode ).to.equal(500)
+          done() 
+        } )
+    })
+  })
+})
+
