@@ -1,0 +1,6 @@
+{
+  "4meal":{
+    "db": "mongodb://4mealServer:serverside1@ds235947.mlab.com:35947/4meal",
+    "cookieSecret": "secretWordHere"
+  }
+}

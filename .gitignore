@@ -1,5 +1,4 @@
 /node_modules/
-/config/
 /lib/
 /client/build/
 .nyc_output

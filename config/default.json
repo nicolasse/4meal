@@ -1,0 +1,12 @@
+
+{
+  "4meal":{
+    "db": "mongodb://localhost:27017/4mealTest",
+    "cookieSecret": "secretWordHere",
+    "facebook": {
+	    "app_id": "534497303720487",
+	    "app_secret": "7eb3bd723a82db7822afc5719604a6d6",
+	    "callback": "https://localhost:8080/api/auth/facebook/callback"
+    }
+  }
+}
