@@ -1,4 +1,7 @@
 /node_modules/
 /lib/
 /client/build/
+/config/
+firebase.json
+package-lock.json
 .nyc_output
