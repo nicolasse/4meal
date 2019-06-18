@@ -9,20 +9,16 @@ import {
   FETCH_INGREDIENT_SUCCESS,
   FETCH_INGREDIENT_FAILURE,
   CLEAR_SUGGESTIONS,
-  HOVER_INGREDIENT
+  HOVER_INGREDIENT,
 } from '../actions/searchActions'
 
 const INITIAL_STATE = {
   error: null,
   loading: false,
   recipe: {},
+  loadingRecipe: false,
   recipes: [],
-  ingredients: [{
-    name: '',
-    img_url: '',
-    hover: false,
-    _id: ''
-  }]
+  ingredients: []
 }
 
 const searchReducer = ( state = INITIAL_STATE, action ) => {
@@ -36,7 +32,7 @@ const searchReducer = ( state = INITIAL_STATE, action ) => {
       return {
         ...state,
         loading: false,
-        recipes: action.payload
+        recipes: action.payload,
       }
     case FETCH_RECIPES_FAILURE:
       return {
@@ -47,18 +43,18 @@ const searchReducer = ( state = INITIAL_STATE, action ) => {
     case FETCH_RECIPE_STARTED:
       return {
         ...state,
-        loading: true,
+        loadingRecipe: true,
       }
     case FETCH_RECIPE_SUCCESS:
       return {
         ...state,
-        loading: false,
+        loadingRecipe: false,
         recipe: action.payload
       }
     case FETCH_RECIPE_FAILURE:
       return {
         ...state,
-        loading: false,
+        loadingRecipe: false,
         error: action.payload.error
       }
     case FETCH_INGREDIENT_STARTED:
@@ -87,9 +83,10 @@ const searchReducer = ( state = INITIAL_STATE, action ) => {
     case CLEAR_SUGGESTIONS:
       return {
         ...state,
-        ingredients: [{ name: '', img_url: '' }]
+        ingredients: []
       }
-    case HOVER_INGREDIENT:
+    case HOVER_INGREDIENT:{
+
       let newIngredientsList = Object.assign( [], state.ingredients )
       let result = newIngredientsList.map(ing => {
         return {
@@ -101,6 +98,7 @@ const searchReducer = ( state = INITIAL_STATE, action ) => {
         ...state,
         ingredients: result
       }
+    }
     default: return state
   }
 }

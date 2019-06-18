@@ -1,17 +1,23 @@
 import styled from 'styled-components'
 
 export const Wrapper = styled.section`
-  width: 100%;
+  width: 500px;
+  min-height: 500px;
+  padding: 2em;
+  margin-top: 4em;
+  background: rgba(255,255,255, 0.7);
+  overscroll-behavior: none;
 `
 export const FormContent = styled.div`
-  height: 60vh;
-  overflow-y: auto;
   padding: 1em;
   background: white;
-
+  display: flex;
+  flex-flow: column nowrap;
 `
 
-export const Create = styled.input.attrs({type: 'submit'})`
+export const Create = styled.span`
+  cursor: pointer;
+  padding: 0 10px;
   text-decoration: none;
   border: none;
   border-radius: 3px;
@@ -27,10 +33,11 @@ export const Create = styled.input.attrs({type: 'submit'})`
 `
 export const Add = styled.span`
   cursor: pointer;
+  display: flex;
   text-decoration: none;
   border: none;
   border-radius: 3px;
-  font-size: 2em;
+  font-size: 1em;
   border-radius: 1px solid black;
   background: #58fc5d;
   &:hover{
@@ -38,30 +45,33 @@ export const Add = styled.span`
     color: white;
   }
   justify-self: end;
+  align-items: center;
   margin: 1em;
   padding: 0 0.5em;
+`
+
+export const Cancel = styled(Add)`
+  background: #fff95b;
+
 `
 
 export const Select = styled.select`
   border: 1px solid gey;
   background: white;
   height: 2em;
+  align-self: center;
   
 `
-export const Textarea = styled.textarea.attrs({ required: true })`
+export const Textarea = styled.textarea`
   font-size: 1.5em;
-  width: 100%;
-  min-height: 100px;
+  width: 500px;
   resize: none;
-  border: 1px solid grey;
+  border: 1px solid;
 `
 
 export const AddIngredient = styled.div`
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-around;
-  padding: 1em;
-  align-items: center;
 `
 export const AddDirections = styled(AddIngredient)`
 
@@ -69,14 +79,14 @@ export const AddDirections = styled(AddIngredient)`
 
 export const Ingredient = styled.div`
   display: flex;
-  flex: 100%;
-  font-size: 4em;
-  border: 1px solid grey;
+  width: 400px;
+  font-size: 2em;
   background: white;
 `
 export const Icon = styled.img`
   align-self: center;
-  margin-left: auto;
-  margin-right: 5px;
-  height: 0.9em;
+  margin-left: 1em;
+  height: 1em;
+  width: 1em;
+  border-radius: 0.5em;
 `

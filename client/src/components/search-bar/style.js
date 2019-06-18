@@ -4,22 +4,26 @@ import { NavLink } from 'react-router-dom'
 export const Wrapper = styled.div`
   display: flex;
   flex-flow: row wrap;
-  flex: 1 1 auto;
-  position: relative;
   box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.5);
+  width: 500px;
+
 `
 
 export const SuggestList = styled.ul`
+  max-height: 0;
+  transition: max-height 200ms ease-out;
   list-style-type: none;
   position: absolute;
-  font-size: 4em;
+  font-size: 2em;
   margin: 0;
-  margin-top: calc(1em + 10px);
+  margin-top: calc(1em + 8px);
   padding: 0;
-  width: 100%;
-  max-height: 4em;
+  width: 500px;
+  ${props => props.shouldHide ? 'max-height: 0' : 'max-height: 4em'};
   overflow-y: auto;
   box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.5);
+  z-index: 999999;
+  overscroll-behavior: contain;
 `
 
 export const Suggest = styled.li`
@@ -27,29 +31,35 @@ export const Suggest = styled.li`
   background: white; 
   padding: 5px;
   cursor: pointer;
-  background: ${ props => props.hover ? 'white' : '#ccdee8'};
-  border: 1px solid #ccdee8;
+  background: ${ props => props.hover ? 'white' : '#b6b6b6'};
+  border: 1px solid #b6b6b6;
+  border-top: none;
 `
 
 export const Icon = styled.img`
   align-self: center;
   margin-left: auto;
   margin-right: 5px;
-  height: 0.9em;
+  height: 1em;
+  width: 1em;
+  border-radius: 0.5em;
+  object-fit: cover;
 `
 
 export const ContentBar = styled.div`
-  border: 1px solid #ccdee8;
+  border: 1px solid #b6b6b6;
   background: white;
   display: flex;
+  width: 100%;
 `
 export const Search = styled.input`
   apparence: none;
   border: none;
-  font-size: 4em;
+  font-size: 2em;
   background: white;
   background: ${ props => props.selected ? 'white' : '#ccdee8'};
   width: 80%;
+  outline: none;
 `
 
 export const CreateButton = styled(NavLink)`
@@ -60,7 +70,7 @@ export const CreateButton = styled(NavLink)`
   display: ${ props => props.shouldhide ? 'none' : 'flex' }
   background: rgba(0, 0, 0, 0);
   width: 20%;
-  font-size: 1.25em;
+  font-size: 1em;
 
 `
 

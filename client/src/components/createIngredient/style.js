@@ -10,6 +10,7 @@ export const Wrapper = styled.div`
 
 
 export const CancelButton = styled.button`
+  cursor: pointer;
   text-decoration: none;
   border: none;
   border-radius: 3px;
@@ -26,6 +27,7 @@ export const CancelButton = styled.button`
 `
 
 export const CreateButton = styled.input.attrs({type: 'submit'})`
+  cursor: pointer;
   text-decoration: none;
   border: none;
   border-radius: 3px;

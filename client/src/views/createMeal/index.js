@@ -2,6 +2,7 @@ import CreateMeal from '../../components/createMeal'
 import Recipe from '../../components/recipe'
 import { Wrapper, Section, Title } from './style'
 import axios from 'axios'
+import { connect } from 'react-redux'
 
 import React, { Component } from 'react'
 
@@ -12,7 +13,8 @@ class Meal extends Component {
     category:'snack',
     description: '',
     ingredients: [],
-    directions: []
+    directions: [],
+    hidePreview: true,
 
   }
 
@@ -27,13 +29,13 @@ class Meal extends Component {
       ...this.state,
       ingredients: this.state.ingredients.map( ingredient => {
         return {
-          nameId: ingredient.ingredientObject._id,
+          nameId: ingredient.nameId._id,
           amount: ingredient.amount,
           measure: ingredient.measure
         }
       } )
     }
-    axios.post('/api/meals', toSubmit)
+    axios.post('/api/meals', toSubmit,{headers: { 'token': this.props.user._lat }} )
       .then( res => {
         console.log('success!')
         this.props.history.goBack()
@@ -56,19 +58,26 @@ class Meal extends Component {
           </Title>
           <CreateMeal
             handleChange= { this.handleChange }
+            image={this.state.img_url}
             add= { this.addIngredient } 
             handleSubmit= { this.handleSubmit }
           />
         </Section>
-        <Section>
+        {
+          /*
+        <span onClick={() => this.setState(prevState => ({hidePreview: !prevState.hidePreview}))}>Preview</span>
+            * */
+        }
+        <Section hide={this.state.hidePreview}>
           <Title>
             Preview
           </Title>
-          <Recipe recipe= { this.state }/>
+          <Recipe preview= { this.state }/>
         </Section>
       </Wrapper>
     )
   }
 }
 
-export default Meal
+const mapStateToProps = state => ({ user: state.loginReducer.user })
+export default connect(mapStateToProps, null)(Meal)

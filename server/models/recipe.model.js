@@ -38,6 +38,11 @@ const RecipeSchema = new mongoose.Schema({
   dislikes: {
     type: Number,
     default: 0
+  },
+  created_by: {
+    user_id: String,
+    photoURL: String,
+    name: String,
   }
 
 })

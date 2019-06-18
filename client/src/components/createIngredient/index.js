@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux'
 import { Wrapper, CreateButton, CancelButton, Preview } from './style'
 import { Input } from '../commons/style'
 import axios from 'axios'
@@ -13,13 +14,14 @@ class CreateIngredient extends Component {
 
   componentDidMount(){
     this.setState({
+      name: this.props.name,
       img_url: 'https://yourlighterside.com/wp-content/uploads/2012/09/Low-Carb.jpg' 
     })
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
-    axios.post('/api/ingredients', this.state )
+    axios.post('/api/ingredients', this.state, )
       .then( res => {
         console.log('success!')
         this.props.history.goBack()
@@ -50,7 +52,7 @@ class CreateIngredient extends Component {
             onChange={ this.handleChange }
             name='name'
             placeholder='name' 
-            defaultValue={ this.props.newIngredient }
+            defaultValue={ this.props.name }
             required
           />
           link of the image
@@ -72,4 +74,5 @@ class CreateIngredient extends Component {
   }
 }
 
-export default withRouter(CreateIngredient)
+const mapStateToProps = state => ({ user: state.loginReducer.user })
+export default withRouter(connect(mapStateToProps, null)(CreateIngredient))

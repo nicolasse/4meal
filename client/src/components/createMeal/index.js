@@ -8,6 +8,7 @@ import {
   Ingredient,
   Icon,
   Add,
+  Cancel,
   Create,
   FormContent
 } from './style'
@@ -19,17 +20,24 @@ const measures= ['tablespoon', 'teaspoon', 'cup', 'unity', 'half', 'quarter', 'g
 
 class CreateMeal extends Component {
   state={
-    nameId:{},
+    nameId:null,
     measure:'tablespoon',
     amount: 1,
     directions: [],
     newDirection: '',
-    ingredients: []
+    ingredients: [],
+    imageError: false
   }
 
   handleSubmit = (e) => {
-    e.preventDefault()
-    this.props.handleSubmit()
+    if(e.key === 'Enter'){
+      return
+    }
+    else{
+      e.preventDefault()
+      this.props.handleSubmit()
+    }
+
   }
 
   showIngredientsOptions = () => {
@@ -51,6 +59,7 @@ class CreateMeal extends Component {
       ingredients: prevState.ingredients.concat( [{amount: prevState.amount, measure: prevState.measure, nameId: prevState.nameId}] )
     }), () => {
       this.props.add(this.state.ingredients)
+      this.setState({nameId: null})
     } )
   }
 
@@ -100,8 +109,8 @@ class CreateMeal extends Component {
   render(){
     return(
       <Wrapper>
-        <form onSubmit={ this.handleSubmit }>
-        <FormContent>
+        <form>
+        <FormContent >
           Meal
           <Input
             onChange={ this.props.handleChange }
@@ -112,31 +121,29 @@ class CreateMeal extends Component {
           />
           Image
           <Input
-            onChange={ this.props.handleChange }
+            onChange={(e) => {
+              this.setState({imageError: false})
+              this.props.handleChange(e)
+            } }
             placeholder='image url' 
             name='img_url'
+            error={this.state.imageError}
             required
           />
           <br />
-          Select category
-          <Select 
-            name='category'
-            onChange={ this.props.handleChange }
-          >
-            <option>snack</option>
-            <option>complex</option>
-          </Select>
           <br /><br />Description
           <Textarea 
             type='text'
             onChange={ this.props.handleChange }
             name='description'
+            required
             placeholder='Write a description here...'
           />
-          <SearchBar add={ this.handleAdd} autoFocus={false}/>
-          +ingredients: amount measure
+          +ingredients:
+          {
+            this.state.nameId ?
           <AddIngredient>
-            <Ingredient>
+            <Ingredient >
               { this.state.nameId.name }
               <Icon src={ this.state.nameId.img_url } />
             </Ingredient>
@@ -145,13 +152,16 @@ class CreateMeal extends Component {
               type='number'
               name='amount'
               defaultValue='1'
-              style={{ width: '2em', heigth: '2em', 'text-align': 'center'}}
+              style={{ border:'none',width: '2em', heigth: '2em', 'text-align': 'center'}}
             />
             <Select onChange={ this.handleChange } name='measure'>
               { this.showMeasures() }
             </Select>
             <Add onClick={ this.handleAddIngredient }>Add</Add>
-          <ul>
+            <Cancel onClick={ () => this.setState({nameId: null}) }>Cancel</Cancel>
+          </AddIngredient>
+            : <SearchBar addOnCreate={ this.handleAdd} autoFocus={false}/>
+          }<ul>
             { this.state.ingredients.map( (ing, index) => {
               return (
                 <li key={ing.nameId._id}>
@@ -162,9 +172,9 @@ class CreateMeal extends Component {
               } ) 
             }
           </ul>
-          </AddIngredient>
-          <AddDirections>
+
           +directions
+          <AddDirections>
           <Input 
               value={ this.state.newDirection }
               onChange={ this.handleChangeDirection }
@@ -185,13 +195,12 @@ class CreateMeal extends Component {
             </ul>
           </AddDirections>
           </FormContent>
-          <Create value='Create' />
+          <Create onClick={(e) => this.handleSubmit(e) }>Create</Create>
         </form>
       </Wrapper>
     )
   }
 }
 
-const mapStateToProps = state => ({ ingredients: state.ingredi })
 
 export default CreateMeal

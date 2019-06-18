@@ -1,7 +1,18 @@
 import React, { Component } from 'react'
-import { Wrapper, Description, Img, IngredientFilter, Remove, List, Ingredient, Icon } from './style'
+import { RemoveHover,
+  Wrapper,
+  Description,
+  Img,
+  IngredientFilter,
+  Remove,
+  List,
+  Li,
+  Item,
+  Ingredient,
+  Icon } from './style'
 import { connect } from 'react-redux'
 import { remove } from '../../actions/filterActions'
+import defaultImg from '../../default.jpg'
 
 
 class Results extends Component {
@@ -12,28 +23,29 @@ class Results extends Component {
 
   showSelectedIngredients = () => {
     return this.props.ingredients.map( ingredient => {
+      let loaded = false
       return (
-        /*
-        <IngredientFilter key={ ingredient.key }>
-          { ingredient.name }
-           <Remove onClick={ () => this.handleRemove(ingredient._id) }>
-             x
-          </Remove>
-        </IngredientFilter>*/
-        <Ingredient 
-          key= {ingredient._id}
-          onClick= { () => { this.handleRemove(ingredient._id) } }
-        >
-          { ingredient.name }
-          <Icon src={ingredient.img_url} />
-        </Ingredient>
+        <Li>
+          <Item>
+            <Icon 
+              src={ingredient.img_url}
+              onError={(e) => {e.target.onerror = null;  e.target.src = defaultImg}}
+            />
+          <Ingredient 
+            key= {ingredient._id}
+            onClick= { () => { this.handleRemove(ingredient._id) } }
+          >
+            { ingredient.name }
+          </Ingredient>
+        </Item>
+        </Li>
       )
     })
   }
 
   render(){
     return(
-        <List>
+        <List column={this.props.column}>
           { this.showSelectedIngredients() }
         </List>
     )
