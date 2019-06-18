@@ -1,18 +1,32 @@
 import styled from 'styled-components'
-let img = require('./images/tmg-slideshow_l.jpg')
+import { device } from './device.js'
 
 export const Content = styled.section`
-  height: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
 `
 
-export const BackgroundImg = styled.div`
-  min-height: 100vh;
-  box-sizing: border-box;
-  background-image: url(${img});
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  position: absolute;
-  z-index: 2;
-  
+export const SearchSection = styled.section`
+  margin-bottom: 2em;
+  display: flex;
+  flex:1;
+  justify-content: center;
 `
+
+
+
+
+export const FilterSection = styled.section`
+  max-height: 50px;
+  display: flex;
+  justify-content: center;
+`
+
+export const Section = styled.section`
+  display: flex;
+  flex: 100%;
+  justify-content: center;
+  @media ${device.laptop}{
+  }
+`
+

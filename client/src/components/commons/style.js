@@ -5,8 +5,9 @@ export const  Input = styled.input`
   color: black;
   font-size: 2em;
   margin: 5px 0px 15px 0px;
-  width: 100%;
-  border: 1px solid;
+  width: 500px;
+  border:none;
+  border-bottom: 2px solid grey;
   box-sizing: border-box;
 
 `

@@ -1,35 +1,19 @@
 import axios from 'axios'
 
-export const FETCH_CREDENTIALS_STARTED = 'FETCH_CREDENTIALS_STARTED'
-export const FETCH_CREDENTIALS_SUCCESS = 'FETCH_CREDENTIALS_SUCCESS'
-export const FETCH_CREDENTIALS_FAILURE = 'FETCH_CREDENTIALS_FAILURE'
+export const LOGGED = 'LOGGED'
+export const LOGOUT = 'LOGOUT'
 
-export const fetchCredentials = () => {
-  return dispatch => {
-    dispatch( fetchCredentialsStarted() )
-    axios({
-      method: 'GET',
-      url: '/api/auth/facebook',
-    })
-      .then( res =>{
-        dispatch(fetchCredentialsSuccess(res.data))
-      } )
-      .catch( err => {
-        dispatch(fetchCredentialsFailure(err.message))
-      } )
+export const logged = (user) => { 
+  return {
+    type: LOGGED,
+    payload: user
+
   }
 }
 
-const fetchCredentialsSuccess = credentials => ({
-  type: FETCH_CREDENTIALS_SUCCESS,
-  payload: credentials
-})
+export const logout = () => {
+  return {
+    type: LOGOUT
+  }
 
-const fetchCredentialsStarted = () => ({
-  type: FETCH_CREDENTIALS_STARTED
-})
-
-const fetchCredentialsFailure = error => ({
-  type: FETCH_CREDENTIALS_FAILURE,
-  payload: error
-})
+}

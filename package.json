@@ -4,27 +4,35 @@
   "description": "help for make a meal",
   "main": "server/index.js",
   "scripts": {
-    "start": "nodemon --ignore client/ --exec babel-node server/index.js --delay 1500ms",
-    "test": "NODE_ENV=test nyc  mocha --require babel-core/register 'test/meal.test' --exit",
-    "loadDb": "mongo 127.0.0.1:27017/4mealTest  loadDb.js"
-
+    "start": "node lib/index.js",
+    "dev": "nodemon --ignore client/ --exec babel-node server/index.js --delay 1500ms",
+    "test": "NODE_ENV=test nyc  mocha --require @babel/register 'test/meal.test' --exit",
+    "build":"npm run build --prefix ./client && babel server -d lib ",
+    "postinstall": "npm install client && rm -rf lib | rm -rf ./client/build && npm run build" 
   },
   "author": "nicolas sanchez ernst",
   "license": "AGPL-3.0-or-later",
   "dependencies": {
+    "@babel/runtime": "^7.4.5",
     "body-parser": "^1.18.3",
+    "client": "file:client",
     "config": "^3.0.1",
     "express": "^4.16.4",
+    "firebase-admin": "^8.0.0",
     "fs": "0.0.1-security",
     "https": "^1.0.0",
     "method-override": "^3.0.0",
     "mongoose": "^5.3.13",
     "morgan": "^1.9.1",
-    "passport": "^0.4.0",
-    "passport-facebook": "^2.1.1"
+    "path": "^0.12.7"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.4.5",
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/register": "^7.4.4",
     "babel-core": "^6.26.3",
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",

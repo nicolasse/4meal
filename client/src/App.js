@@ -13,6 +13,8 @@ import CreateMeal from './views/createMeal'
 import ShowMeal from './views/showMeal'
 import Recipe from './components/recipe'
 import Navbar from './components/navbar'
+import SearchBar from './components/search-bar'
+import MealResult from './components/mealsResults'
 
 const store = configureStore()
 class App extends Component {
@@ -26,7 +28,7 @@ class App extends Component {
             <Route exact path='/' component={ Home } />
             <Route path='/ingredients' component={ Ingredients } />
             <Route exact path='/meals' component={ CreateMeal } />
-            <Route path='/meals/:id' render={({ match }) => (<ShowMeal id={ match.params.id }/> )}/>
+            <Route path='/1meals/:id' render={({ match }) => (<ShowMeal id={ match.params.id }/> )}/>
           </Switch>
       </Content>
       </Router>
