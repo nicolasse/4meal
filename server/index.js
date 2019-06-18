@@ -36,14 +36,6 @@ app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 });
 
-
-/*https.createServer({
-  key: fs.readFileSync('config/server.key'),
-  cert: fs.readFileSync('config/server.cert'),
-}, app).listen( port, () => {
-  if(process.env.NODE_ENV !== 'test')
-    console.log('HTTPS Runing on port: ' + port)
-} )*/
 app.listen(port, () => { console.log('Running port ' + port) })
 
 module.exports = app
