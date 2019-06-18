@@ -1,4 +1,9 @@
 import Recipes from '../models/recipe.model'
+import mongoose from 'mongoose'
+
+function ObjectId(id){
+  return mongoose.Types.ObjectId(id)
+}
 
 exports.getMealByIngredients = ( req, res ) => {
   let arrayIngredients, query
@@ -7,10 +12,19 @@ exports.getMealByIngredients = ( req, res ) => {
     let filteredQuery = arrayIngredients.filter( ingredient => {
       return ingredient != ''
     } )
+    let objefy = filteredQuery.map( ing  => {
+      try{
+        return ObjectId(ing)
+      }catch(error) {
+        return null
+      }
+    })
     arrayIngredients.pop()
-    query = { 'ingredients.nameId': { $all: filteredQuery }  }
+    query = { 'ingredients.nameId': { $all: objefy }  }
     Recipes
       .find( query )
+      .populate( 'ingredients.nameId' )
+      .sort({'ingredients.length': -1})
       .lean()
       .then( meals  => {
         res.status(200).json( meals )
@@ -38,6 +52,13 @@ exports.getById = ( req, res ) => {
 
 exports.newRecipe = ( req, res ) => {
   let newRecipe = new Recipes( req.body )
+  let user = {
+    name: req.user.name,
+    photoURL: req.user.picture,
+    user_id: req.user.user_id
+ 
+  }
+  newRecipe.created_by= user
   newRecipe.save()
     .then( recipe => {
       res.status(201).end()

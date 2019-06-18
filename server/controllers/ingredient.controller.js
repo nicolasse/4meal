@@ -5,15 +5,15 @@ exports.getIngredientsSuggest = ( req, res ) => {
   Ingredient.find({'name': { $regex: regIngredient, $options: 'i' }})
     .lean()
     .then( result => {
-      let response = result.length === 0 ? [{ name: '', img_url: '' }] : result
-      res.status(200).json( response )
+      let response = result.length === 0 ? [] : result
+      res.status(200).json( result )
     } )
     .catch( error => {
       res.status(500).json(error.message)
     } )
 }
 
-exports.createIngredient = ( req, res ) => {
+exports.createIngredient = (req, res ) => {
   let newIngredient = new Ingredient( req.body )
   newIngredient.name = req.body.name
   newIngredient.img_url = req.body.img_url

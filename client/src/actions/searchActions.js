@@ -16,6 +16,7 @@ export const CLEAR_SUGGESTIONS = 'CLEAR_SUGGESTIONS'
 
 export const HOVER_INGREDIENT = 'HOVER_INGREDIENT' 
 
+
 export const fetchRecipes = ( ingredients ) => {
   return dispatch => {
     dispatch( fetchRecipesStarted() )

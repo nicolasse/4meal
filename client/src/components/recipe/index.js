@@ -1,9 +1,44 @@
-import React, { Component } from 'react'
-import {Li, Number,Info, Header, Wrapper, Title, Image, Description } from './style'
+import React, { useEffect, useState } from 'react'
+import {
+  Bar,
+  Li,
+  Number,
+  Info,
+  Header,
+  Wrapper,
+  Title,
+  Image,
+  Description,
+  Ingredients,
+  IngredientButton,
+  CreatedBy,
+  ProfileImage,
+  User,
+  Directions,
+  List
+} from './style'
+import {connect} from 'react-redux'
+import { fetchRecipeById } from '../../actions/searchActions'
+import { add } from '../../actions/filterActions'
 
 
 function Recipe(props){
-  let recipes = props.recipe
+  const [ loadingImage , setLoading ] = useState(false)
+  const [img, setImg] = useState('')
+
+  useEffect(() => {
+    if(props.id){
+      props.fetchRecipeById( props.id )
+      setLoading(true)
+    }
+    setTimeout(() => {
+      setLoading(false)
+      if(props.scroll)
+        window.scroll({top: 500, behavior: 'smooth'})
+    }, 300)
+  }, [props.id])
+
+  let recipes = props.preview || props.recipe
   const showIngredients = (ingredients) =>
   {
     return ingredients.map( ingredient =>
@@ -14,42 +49,83 @@ function Recipe(props){
             ingredient.amount
             + ' ' +
             ingredient.measure
-            + ' ' +
-            ingredient.nameId.name
+            + ' ' 
           }
+          <IngredientButton onClick={() =>{ props.add(ingredient.nameId)}}>{ingredient.nameId.name}</IngredientButton>
         </li>
       )
     })
   }
-    return(
-      <Wrapper>
-        <Header>
-          <Image src={ recipes.img_url } />
-          <Info>
-            <h2>{ recipes.name }</h2>
-            <br />
-            <strong>{ recipes.category }</strong>
-            <br />
 
-            <Description>
-              { '"' + recipes.description + '"' }
-            </Description>
+  if(props.id === null)
+      return null
+    else
+    return(
+      <Wrapper id='recipe'>
+        <Bar />
+          <Info>
+            <h1>{ recipes.name }</h1>
+
           </Info>
-        </Header>
+        <Header>
+            <Description>
+              <Image
+                src={ recipes.img_url }
+                loading={ loadingImage }
+                onLoad={() =>{
+                  setImg(recipes.img_url);
+                  setLoading(false);
+                }}
+                onError = {(e) => {
+                  e.target.src = 'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png'
+                  e.target.error = false 
+                }
+
+                }
+              />
+          <span> { '"' + recipes.description + '"' }</span>
+            </Description>
+            <Ingredients>
           Ingredients
           <ul>
             { recipes.ingredients ? showIngredients(recipes.ingredients): null }
           </ul>
+            </Ingredients>
+        </Header>
+        <Directions> 
           Directions:
           {
             recipes.directions 
-              ?  <ul>{recipes.directions.map( (step, index) => {
+              ?  <List>{recipes.directions.map( (step, index) => {
                 return <Li><Number>{index + 1}</Number>{step}</Li> } )
-              }</ul> 
+              }</List> 
               : null
           }
+
+          {
+            recipes.created_by ?
+            <CreatedBy>
+              <User>{recipes.created_by.name}</User>
+              <ProfileImage src={recipes.created_by.photoURL}/>
+            </CreatedBy>
+              :null
+          }
+          
+        </Directions> 
       </Wrapper>
     )
 }
+const mapStateToProps = ( state ) => ({
+  recipe: state.searchReducer.recipe,
+  loading: state.searchReducer.loadingRecipe
+})
+const mapDispatchToProps =  dispatch  => ({
+  fetchRecipeById: (id) => {
+    dispatch( fetchRecipeById(id) )
+  },
+  add: (ingredient) => {
+    dispatch(add(ingredient))
+  }
+})
 
-export default Recipe
+export default connect(mapStateToProps, mapDispatchToProps)(Recipe)

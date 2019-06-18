@@ -1,17 +1,29 @@
-import SearchBar from '../../components/search-bar'
 import MealsResults from '../../components/mealsResults'
 import FilterIngredients from '../../components/filterIngredients'
 import React, { Component } from 'react'
 import Header from '../../components/header'
-import {Main, Wrapper, Section, SearchSection, CreateMeal } from './style'
+import {
+  Background,
+  Main,
+  Wrapper,
+  FilterSection,
+  Section,
+  SearchSection,
+  CreateMeal,
+  Title,
+  Container,
+  RecipeSection
+} from './style'
 import { clearSuggestions } from '../../actions/searchActions'
 import { connect } from 'react-redux'
-import { add } from '../../actions/filterActions'
-import Navbar from '../../components/navbar'
+import SearchBar from '../../components/search-bar'
+import MealResult from '../../components/mealsResults'
+import Recipe from '../../components/recipe'
+import ShowMeal from '../showMeal'
 
 class Home extends Component {
   state= {
-    id: ''
+    id: null
   }
   handleAnyClick = ()=>{
     this.props.clearSuggestions()
@@ -24,18 +36,23 @@ class Home extends Component {
   render(){
     return (
       <Wrapper onClick={ this.handleAnyClick }>
-          <SearchSection>
-              What do you have in your fridge?
-            <SearchBar add={ this.props.add } autoFocus/>
-          </SearchSection>
-        <Main>
-          <Section ingredients>
-            <FilterIngredients />
-          </Section>
+      <SearchSection>
+        <Container >
+          <Title>  
+          What do you have in your fridge?
+          </Title>  
+          <SearchBar />
+        </Container>
+      </SearchSection>
+      <FilterSection >
+        <FilterIngredients />
+        </FilterSection>
           <Section>
-            <MealsResults handleClick={ this.handleClick }/>
-          </Section>
-        </Main>
+          <MealResult recipeId={this.handleClick}/>
+        </Section>
+        <RecipeSection>
+        <Recipe scroll id={this.state.id}/>
+      </RecipeSection>
       </Wrapper>
     )
   }
@@ -45,9 +62,7 @@ const mapDispatchToProps = dispatch => ({
   clearSuggestions: () => {
     dispatch(clearSuggestions())
   },
-  add: ( ingredient ) => {
-    dispatch( add(ingredient) )
-  },
 })
 
 export default connect(null, mapDispatchToProps)(Home)
+
