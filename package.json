@@ -4,10 +4,11 @@
   "description": "help for make a meal",
   "main": "server/index.js",
   "scripts": {
-    "start": "babel server -d lib |  NODE_ENV=production node lib/index.js",
+    "start": "NODE_ENV=production node lib/index.js",
     "dev": "nodemon --ignore client/ --exec babel-node server/index.js --delay 1500ms",
     "test": "NODE_ENV=test nyc  mocha --require @babel/register 'test/meal.test' --exit",
-    "postinstall": "npm install client && rm -rf lib | rm -rf ./client/build && npm run build --prefix ./client"
+    "build":"npm run build --prefix ./client && babel server -d lib ",
+    "postinstall": "npm install client && rm -rf lib | rm -rf ./client/build && npm run build" 
   },
   "author": "nicolas sanchez ernst",
   "license": "AGPL-3.0-or-later",
