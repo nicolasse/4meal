@@ -12,7 +12,7 @@ import fs from 'fs'
 import User from './models/user.model'
 
 const app = express()
-const port =  8080
+const port =  process.env.PORT || 8080
 const configDb = config.get('4meal.db')
 
 mongoose.connect( configDb, { useNewUrlParser: true } )
@@ -37,12 +37,13 @@ app.get('/*', function (req, res) {
 });
 
 
-https.createServer({
+/*https.createServer({
   key: fs.readFileSync('config/server.key'),
   cert: fs.readFileSync('config/server.cert'),
 }, app).listen( port, () => {
   if(process.env.NODE_ENV !== 'test')
     console.log('HTTPS Runing on port: ' + port)
-} )
+} )*/
+app.listen(port, () => { console.log('Running port ' + port) })
 
 module.exports = app
