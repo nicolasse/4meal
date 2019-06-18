@@ -4,7 +4,7 @@
   "description": "help for make a meal",
   "main": "server/index.js",
   "scripts": {
-    "start": "NODE_ENV=production node lib/index.js",
+    "start": "node lib/index.js",
     "dev": "nodemon --ignore client/ --exec babel-node server/index.js --delay 1500ms",
     "test": "NODE_ENV=test nyc  mocha --require @babel/register 'test/meal.test' --exit",
     "build":"npm run build --prefix ./client && babel server -d lib ",
