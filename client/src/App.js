@@ -18,6 +18,9 @@ import MealResult from './components/mealsResults'
 
 const store = configureStore()
 class App extends Component {
+  componendDidMount(){
+    document.title = '4Meal'
+  }
   render() {
     return (
       <Provider store={ store }>
